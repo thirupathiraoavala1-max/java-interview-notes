@@ -1,190 +1,181 @@
-# JVM Architecture
+# 🏗️ JVM Architecture
 
-## Introduction
-
-The **Java Virtual Machine (JVM)** is a virtual machine responsible for executing Java bytecode. It acts as an intermediary between Java programs and the operating system, making Java platform-independent.
-
-> **Write Once, Run Anywhere (WORA)** is possible because every operating system has its own JVM implementation.
+> 💡 **JVM (Java Virtual Machine)** is the heart of Java. It executes Java Bytecode and makes Java **Platform Independent**.
 
 ---
 
-# JVM Architecture
+# 📌 JVM Architecture Overview
 
 ```text
-                +----------------------+
-                |   Java Source Code   |
-                |      (.java)         |
-                +----------+-----------+
-                           |
-                           | javac
-                           ▼
-                +----------------------+
-                |     Bytecode         |
-                |      (.class)        |
-                +----------+-----------+
-                           |
-                           ▼
-                +----------------------+
-                |         JVM          |
-                +----------+-----------+
-                           |
-     +---------------------+----------------------+
-     |                     |                      |
-     ▼                     ▼                      ▼
- Class Loader       Runtime Data Area     Execution Engine
-                                              |
+               ☕ Java Source Code (.java)
+                        │
+                        ▼
+               🛠️ Java Compiler (javac)
+                        │
+                        ▼
+                 📦 Bytecode (.class)
+                        │
+                        ▼
+              🚀 Java Virtual Machine
+                        │
+ ┌──────────────────────┼──────────────────────┐
+ │                      │                      │
+ ▼                      ▼                      ▼
+📂 Class Loader    💾 Runtime Memory     ⚙️ Execution Engine
+                                              │
                                               ▼
-                                      Native Method Interface
-                                              |
+                                     🔗 Native Interface (JNI)
+                                              │
                                               ▼
-                                         Native Libraries
+                                      🖥️ Native Libraries
 ```
 
 ---
 
-# Components of JVM
+# 📂 Components of JVM
 
-The JVM consists of the following major components:
-
-1. Class Loader Subsystem
-2. Runtime Data Areas
-3. Execution Engine
-4. Native Method Interface (JNI)
-5. Native Libraries
-
----
-
-# 1. Class Loader Subsystem
-
-The Class Loader is responsible for loading `.class` files into memory.
-
-### Responsibilities
-
-- Loads class files
-- Verifies bytecode
-- Allocates memory for classes
-- Resolves symbolic references
-
-### Types of Class Loaders
-
-### Bootstrap Class Loader
-
-- Loads Java core classes
-- Example:
-  - java.lang.String
-  - java.util.List
+| Component | Responsibility |
+|------------|----------------|
+| 📂 Class Loader | Loads Class Files |
+| 💾 Runtime Data Area | Stores Program Data |
+| ⚙️ Execution Engine | Executes Bytecode |
+| 🔗 JNI | Connects Java with Native Code |
+| 🖥️ Native Libraries | Platform Specific Libraries |
 
 ---
 
-### Extension (Platform) Class Loader
+# 📂 1. Class Loader
 
-Loads extension libraries.
+## 🎯 Responsibility
 
-Examples:
-
-- JDK modules
-- Platform libraries
+- ✅ Loads `.class` files
+- ✅ Verifies Bytecode
+- ✅ Resolves References
+- ✅ Initializes Classes
 
 ---
 
-### Application Class Loader
+## 📚 Types of Class Loaders
 
-Loads classes from the application's classpath.
+### 🥇 Bootstrap Class Loader
 
-Example:
+Loads Core Java Classes.
+
+Examples
 
 ```java
-public class Employee {
+java.lang.String
+java.lang.Object
+java.util.ArrayList
+```
+
+---
+
+### 🥈 Platform Class Loader
+
+Loads Platform Libraries.
+
+Example
+
+```text
+java.sql
+java.xml
+```
+
+---
+
+### 🥉 Application Class Loader
+
+Loads User Defined Classes.
+
+```java
+public class Employee{
+
 }
 ```
 
-Employee.class is loaded by the Application Class Loader.
+---
+
+# 💾 Runtime Data Area
+
+Runtime Memory is divided into **5 Parts**
+
+| Memory Area | Shared | Stores |
+|--------------|---------|---------|
+| 🟦 Method Area | ✅ Yes | Class Metadata |
+| 🟩 Heap | ✅ Yes | Objects |
+| 🟨 Stack | ❌ No | Local Variables |
+| 🟧 PC Register | ❌ No | Current Instruction |
+| 🟥 Native Stack | ❌ No | Native Methods |
 
 ---
 
-# 2. Runtime Data Areas
+# 🟦 Method Area
 
-Runtime Data Area is the memory area used during program execution.
+Stores
 
-It contains:
-
-- Method Area
-- Heap
-- Java Stack
-- PC Register
-- Native Method Stack
+- 📌 Class Information
+- 📌 Static Variables
+- 📌 Constant Pool
+- 📌 Method Information
 
 ---
 
-## Method Area
+# 🟩 Heap Memory
 
-Stores:
-
-- Class metadata
-- Static variables
-- Runtime constant pool
-- Method information
-
-Shared among all threads.
-
----
-
-## Heap Memory
-
-Stores:
-
-- Objects
-- Arrays
-
-Example:
+Stores Objects.
 
 ```java
 Employee emp = new Employee();
 ```
 
-The Employee object is created in the Heap.
+📦 Object is created inside **Heap Memory**
 
-Shared among all threads.
+### ⭐ Managed By
 
-Managed by the Garbage Collector.
+Garbage Collector
 
 ---
 
-## Java Stack
+# 🟨 Java Stack
 
-Each thread has its own stack.
+Each Thread has its own Stack.
 
-Stores:
+Stores
 
-- Local variables
-- Method calls
-- Partial results
+- Local Variables
+- Method Calls
+- Intermediate Results
 
-Example:
+Example
 
 ```java
-public void calculate() {
-    int a = 10;
+public void display(){
+
+    int age = 25;
+
 }
 ```
 
-Variable `a` is stored in the Stack.
+`age` is stored in Stack.
 
 ---
 
-## PC Register
+# 🟧 PC Register
 
-Each thread has its own Program Counter Register.
+Stores
 
-Stores the address of the currently executing JVM instruction.
+👉 Address of Current JVM Instruction
+
+Each Thread has its own PC Register.
 
 ---
 
-## Native Method Stack
+# 🟥 Native Method Stack
 
-Stores information related to native methods written in C/C++.
+Stores Native Method Information.
 
-Example:
+Example
 
 ```java
 System.loadLibrary("example");
@@ -192,52 +183,53 @@ System.loadLibrary("example");
 
 ---
 
-# 3. Execution Engine
+# ⚙️ Execution Engine
 
-The Execution Engine executes the bytecode.
+Execution Engine executes Bytecode.
 
-It consists of:
+It contains
 
-- Interpreter
-- JIT Compiler
-- Garbage Collector
-
----
-
-## Interpreter
-
-Reads bytecode line by line and executes it.
-
-### Advantage
-
-Starts execution quickly.
-
-### Disadvantage
-
-Slower for frequently executed code.
+- 🟢 Interpreter
+- 🔵 JIT Compiler
+- 🟣 Garbage Collector
 
 ---
 
-## JIT (Just-In-Time) Compiler
+## 🟢 Interpreter
 
-Converts frequently executed bytecode into native machine code.
+Reads Bytecode
 
-Advantages:
+➡️ One Line at a Time
 
-- Faster execution
-- Better performance
+### 👍 Advantage
 
-Example:
+Fast Startup
 
-Frequently executed loops are compiled into native code.
+### 👎 Disadvantage
+
+Slow Execution
 
 ---
 
-## Garbage Collector
+## 🔵 JIT Compiler
 
-Automatically removes unused objects from Heap memory.
+**Just-In-Time Compiler**
 
-Example:
+Converts Frequently Executed Bytecode
+
+➡️ Native Machine Code
+
+### Benefits
+
+✅ Faster Execution
+
+✅ Better Performance
+
+---
+
+## 🟣 Garbage Collector
+
+Automatically Removes Unused Objects.
 
 ```java
 Employee emp = new Employee();
@@ -245,20 +237,20 @@ Employee emp = new Employee();
 emp = null;
 ```
 
-The object becomes eligible for garbage collection.
+Object becomes eligible for Garbage Collection.
 
 ---
 
-# 4. Native Method Interface (JNI)
+# 🔗 JNI (Java Native Interface)
 
-JNI enables Java code to interact with native applications.
+Allows Java to call Native Languages.
 
-Languages supported include:
+Supported Languages
 
 - C
 - C++
 
-Example:
+Example
 
 ```java
 public native void display();
@@ -266,142 +258,128 @@ public native void display();
 
 ---
 
-# 5. Native Libraries
+# 🖥️ Native Libraries
 
-These are platform-specific libraries such as:
+Examples
 
-- DLL (Windows)
-- SO (Linux)
-
-Used through JNI.
+- Windows ➜ DLL
+- Linux ➜ SO
 
 ---
 
-# JVM Execution Flow
+# 🚀 JVM Execution Flow
 
 ```text
-Java Source (.java)
-        │
-        ▼
-Compiler (javac)
-        │
-        ▼
-Bytecode (.class)
-        │
-        ▼
-Class Loader
-        │
-        ▼
-Runtime Data Area
-        │
-        ▼
-Execution Engine
-        │
-        ▼
-Machine Code
+☕ Java Source (.java)
+          │
+          ▼
+🛠️ Compiler (javac)
+          │
+          ▼
+📦 Bytecode (.class)
+          │
+          ▼
+📂 Class Loader
+          │
+          ▼
+💾 Runtime Memory
+          │
+          ▼
+⚙️ Execution Engine
+          │
+          ▼
+🖥️ Machine Code
 ```
 
 ---
 
-# Real-World Example
+# 🌍 Real World Analogy
 
-Imagine a restaurant:
+🏢 Think of JVM like a Restaurant.
 
-- **Class Loader** → Waiter brings the order.
-- **Method Area** → Menu shared by everyone.
-- **Heap** → Kitchen where dishes are prepared.
-- **Java Stack** → Each chef's personal workspace.
-- **Execution Engine** → Chef preparing the food.
-- **Garbage Collector** → Cleaning staff removing unused plates.
-
----
-
-# Advantages of JVM
-
-- Platform independent
-- Automatic memory management
-- Garbage Collection
-- Security through bytecode verification
-- High performance with JIT compilation
+| Restaurant | JVM |
+|------------|-----|
+| 👨‍🍳 Chef | Execution Engine |
+| 📖 Menu | Method Area |
+| 🍽️ Kitchen | Heap |
+| 👨‍🍳 Work Table | Stack |
+| 🧹 Cleaner | Garbage Collector |
+| 📦 Waiter | Class Loader |
 
 ---
 
-# Disadvantages
+# ✅ Advantages
 
-- Higher memory usage than native applications
-- JVM startup time
-- Performance overhead for small applications
-
----
-
-# Interview Questions
-
-### 1. What are the components of JVM?
-
-- Class Loader
-- Runtime Data Area
-- Execution Engine
-- JNI
-- Native Libraries
+- 🌍 Platform Independent
+- ⚡ High Performance using JIT
+- 🗑️ Automatic Garbage Collection
+- 🔒 Secure
+- 💾 Efficient Memory Management
 
 ---
 
-### 2. Which memory area stores objects?
+# ❌ Disadvantages
 
-**Heap Memory**
-
----
-
-### 3. Which memory area stores local variables?
-
-**Java Stack**
+- 🚀 Startup Time
+- 💾 Higher Memory Usage
+- ⚙️ Performance Overhead compared to Native Applications
 
 ---
 
-### 4. Which memory area is shared among threads?
+# 🎯 Interview Questions
 
-- Heap
-- Method Area
+### ❓ What are the components of JVM?
 
----
-
-### 5. What is the role of the Class Loader?
-
-It loads `.class` files into JVM memory.
-
----
-
-### 6. What is the purpose of the JIT Compiler?
-
-It converts frequently executed bytecode into native machine code to improve performance.
+- 📂 Class Loader
+- 💾 Runtime Data Area
+- ⚙️ Execution Engine
+- 🔗 JNI
+- 🖥️ Native Libraries
 
 ---
 
-### 7. Difference between Stack and Heap?
+### ❓ Which memory stores Objects?
 
-| Stack | Heap |
-|--------|------|
-| Stores local variables | Stores objects |
-| Thread-specific | Shared among threads |
-| Faster access | Comparatively slower |
-| Automatically cleared after method execution | Managed by the Garbage Collector |
+🟩 Heap Memory
 
 ---
 
-# Best Practices
+### ❓ Which memory stores Local Variables?
 
-- Avoid unnecessary object creation.
-- Release resources using try-with-resources.
-- Use appropriate object lifecycles.
-- Be aware of memory leaks caused by lingering object references.
+🟨 Java Stack
 
 ---
 
-# Summary
+### ❓ Which memory is shared among all Threads?
 
-- JVM executes Java bytecode.
-- Class Loader loads classes into memory.
-- Runtime Data Areas manage program memory.
-- Execution Engine runs bytecode using the Interpreter and JIT Compiler.
-- Garbage Collector automatically reclaims unused Heap memory.
-- JNI allows Java to communicate with native code.
+- 🟦 Method Area
+- 🟩 Heap Memory
+
+---
+
+### ❓ Difference Between Stack & Heap
+
+| 🟨 Stack | 🟩 Heap |
+|-----------|---------|
+| Local Variables | Objects |
+| Thread Specific | Shared |
+| Faster | Slower |
+| Auto Cleared | GC Managed |
+
+---
+
+# 💡 Best Practices
+
+✔️ Avoid creating unnecessary objects
+
+✔️ Close Resources properly
+
+✔️ Use Try-With-Resources
+
+✔️ Prevent Memory Leaks
+
+---
+
+# 📝 Summary
+
+> ✅ JVM loads classes, manages memory, executes bytecode, performs garbage collection, and enables Java's **"Write Once, Run Anywhere"** capability.
